@@ -1,0 +1,127 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Request Test – SoilWise{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <h2 class="text-soilwise text-center mb-4">
+                        <i class="fas fa-flask me-2"></i>Request a Soil Test
+                    </h2>
+                    <p class="text-muted text-center mb-4">Select your farm, choose an agent, and provide collection details.</p>
+
+                    {% if not form.fields.agent.queryset %}
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle me-2"></i>
+                            <strong>No agents available yet.</strong> Please check back later or contact support.
+                        </div>
+                    {% endif %}
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            Please correct the errors below.
+                        </div>
+                        {% endif %}
+
+                        <!-- Farm Selection -->
+                        <div class="mb-3">
+                            <label class="form-label">Select Farm</label>
+                            {{ form.farm }}
+                            {% if not form.farm.queryset %}
+                            <small class="text-danger d-block mt-1">
+                                You don't have any farms. <a href="{% url 'add_farm' %}" class="text-soilwise">Add a farm first</a>
+                            </small>
+                            {% endif %}
+                        </div>
+
+                        <!-- Agent Selection -->
+                        <div class="mb-3">
+                            <label class="form-label">Choose Your Agent</label>
+                            <div class="mb-2">
+                                <button type="button" class="btn btn-sm btn-outline-gold me-2" onclick="filterAgents('all')">All</button>
+                                <button type="button" class="btn btn-sm btn-outline-primary me-2" onclick="filterAgents('male')">👨 Male</button>
+                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="filterAgents('female')">👩 Female</button>
+                            </div>
+                            <div id="agent-select-wrapper">
+                                {{ form.agent }}
+                            </div>
+                            {% if form.agent.errors %}
+                            <div class="text-danger small">{{ form.agent.errors }}</div>
+                            {% endif %}
+                            <small class="text-muted">Select an agent to collect your soil sample.</small>
+                        </div>
+
+                        <!-- Collection Location -->
+                        <div class="mb-3">
+                            <label class="form-label">Collection Location <span class="text-danger">*</span></label>
+                            {{ form.collection_location }}
+                            {% if form.collection_location.errors %}
+                            <div class="text-danger small">{{ form.collection_location.errors }}</div>
+                            {% endif %}
+                            <small class="text-muted">Enter the exact address or location description where the agent should collect the sample.</small>
+                        </div>
+
+                        <!-- GPS Coordinates -->
+                        <div class="mb-3">
+                            <label class="form-label">GPS Coordinates (optional)</label>
+                            {{ form.gps_coordinates }}
+                            {% if form.gps_coordinates.errors %}
+                            <div class="text-danger small">{{ form.gps_coordinates.errors }}</div>
+                            {% endif %}
+                            <small class="text-muted">If available, enter GPS coordinates (e.g., 10.5236, 7.4375).</small>
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="mb-3">
+                            <label class="form-label">Additional Notes (optional)</label>
+                            {{ form.notes }}
+                        </div>
+
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <strong>₦2,000</strong> per test. You'll receive results within 3-5 business days.
+                        </div>
+
+                        <button type="submit" class="btn btn-gold w-100 py-2">
+                            <i class="fas fa-paper-plane me-2"></i>Submit Request
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="{% url 'farmer_dashboard' user.id %}" class="text-soilwise">Back to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Gender filter for agents
+    function filterAgents(gender) {
+        const select = document.getElementById('id_agent');
+        const options = select.options;
+        
+        // Show all options
+        for (let i = 0; i < options.length; i++) {
+            options[i].style.display = 'block';
+        }
+        
+        if (gender === 'all') {
+            return;
+        }
+        
+        // This is a placeholder. For full functionality, we need gender data in the select options.
+        // For now, inform the user.
+        alert('Gender filtering will be available with full agent profiles. Please select an agent from the list.');
+    }
+</script>
+{% endblock %}

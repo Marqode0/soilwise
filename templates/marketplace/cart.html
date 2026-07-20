@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Cart – SoilWise{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h2 class="text-soilwise"><i class="fas fa-shopping-cart me-2"></i>Your Cart</h2>
+
+    {% if cart_items %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Quantity</th>
+                        <th>Price</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr>
+                        <td>
+                            <strong>{{ item.product.name }}</strong><br>
+                            <small class="text-muted">{{ item.product.brand }} - {{ item.product.npk_ratio }}</small>
+                        </td>
+                        <td>{{ item.quantity }}</td>
+                        <td>₦{{ item.product.price_per_bag }}</td>
+                        <td>₦{{ item.total }}</td>
+                        <td>
+                            <a href="{% url 'remove_from_cart' item.key %}" class="btn btn-sm btn-danger">
+                                <i class="fas fa-trash"></i>
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <th colspan="3" class="text-end">Total:</th>
+                        <th>₦{{ total }}</th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'checkout' %}" class="btn btn-gold btn-lg">
+                <i class="fas fa-credit-card me-2"></i>Proceed to Checkout
+            </a>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart" style="font-size: 3rem; color: #ccc;"></i>
+            <p class="mt-2">Your cart is empty.</p>
+            <a href="{% url 'request_test' %}" class="btn btn-gold">Request a Test</a>
+        </div>
+    {% endif %}
+
+    <div class="text-center mt-3">
+        <a href="{% url 'farmer_dashboard' user.id %}" class="text-soilwise">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

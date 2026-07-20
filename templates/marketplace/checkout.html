@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Checkout – SoilWise{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <h2 class="text-soilwise text-center mb-4">
+                        <i class="fas fa-credit-card me-2"></i>Checkout
+                    </h2>
+
+                    <div class="alert alert-info">
+                        <h5>Order Summary</h5>
+                        {% for item in order_items %}
+                        <div class="d-flex justify-content-between">
+                            <span>{{ item.product.name }} x {{ item.quantity }}</span>
+                            <span>₦{{ item.total }}</span>
+                        </div>
+                        {% endfor %}
+                        <hr>
+                        <div class="d-flex justify-content-between fw-bold">
+                            <span>Total:</span>
+                            <span>₦{{ total }}</span>
+                        </div>
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="sample_id" value="{{ sample_id }}">
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Delivery Address</label>
+                            <textarea name="delivery_address" class="form-control" rows="3" placeholder="Enter your delivery address" required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-gold w-100 py-2">
+                            <i class="fas fa-check me-2"></i>Place Order
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="{% url 'view_cart' %}" class="text-soilwise">Back to Cart</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,309 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard – SoilWise{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+
+    <!-- ===== NOTIFICATIONS ===== -->
+    {% if user.notifications.all %}
+        {% for notification in user.notifications.all %}
+            {% if not notification.is_read %}
+                <div class="alert alert-info alert-dismissible fade show shadow-sm border-0" role="alert">
+                    <div class="d-flex align-items-start">
+                        <i class="fas fa-bell me-3 mt-1" style="font-size: 1.2rem;"></i>
+                        <div>
+                            <strong>{{ notification.title }}</strong>
+                            <p class="mb-0">{{ notification.message|linebreaks }}</p>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+
+    <!-- Welcome Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="text-soilwise">
+                <i class="fas fa-tachometer-alt me-2"></i>Welcome, {{ user.username }}
+            </h1>
+            <p class="text-muted">Here's your soil health overview</p>
+        </div>
+        <a href="{% url 'request_test' %}" class="btn btn-gold pulse-animation">
+            <i class="fas fa-plus me-2"></i>New Test
+        </a>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card bg-soilwise text-white text-center shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-tractor fa-2x mb-2"></i>
+                    <h5 class="card-title">Total Farms</h5>
+                    <h2 class="display-6">{{ farms|length|default:"0" }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white text-center shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-flask fa-2x mb-2"></i>
+                    <h5 class="card-title">Tests Done</h5>
+                    <h2 class="display-6">{{ total_tests|default:"0" }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark text-center shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-money-bill-wave fa-2x mb-2"></i>
+                    <h5 class="card-title">Money Saved</h5>
+                    <h2 class="display-6">₦45k</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-info text-white text-center shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-calendar-alt fa-2x mb-2"></i>
+                    <h5 class="card-title">Next Test Due</h5>
+                    <h2 class="display-6">Jun 2025</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOIL PASSPORT -->
+    <div class="passport-card mb-4">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <span class="badge-gold">Soil Passport</span>
+                <h3 class="mt-2">{{ farms.first.name|default:"Your Farm" }}</h3>
+                <p class="mb-0 text-muted">
+                    <i class="fas fa-map-pin me-2"></i>{{ farms.first.location|default:"Nigeria" }}
+                </p>
+                <p class="text-muted small">
+                    <i class="fas fa-calendar me-2"></i>Last tested: {{ recent_tests.first.created_at|date:"M d, Y"|default:"Never" }}
+                </p>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="score">82</div>
+                <div class="label">Soil Health Score</div>
+            </div>
+            <div class="col-md-3 text-center">
+                <div class="score">+35%</div>
+                <div class="label">Yield Improvement</div>
+            </div>
+        </div>
+        <div class="text-end mt-3">
+            <button onclick="window.print()" class="btn btn-sm btn-outline-gold">
+                <i class="fas fa-print me-2"></i>Print Passport
+            </button>
+        </div>
+    </div>
+
+    <!-- Soil Health Gauge -->
+    <div class="row mb-4">
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body text-center">
+                    <h5 class="text-soilwise">Soil Health Score</h5>
+                    <div class="position-relative d-inline-block">
+                        <svg width="180" height="180" viewBox="0 0 180 180">
+                            <circle cx="90" cy="90" r="75" fill="none" stroke="#e9ecef" stroke-width="12"/>
+                            <circle cx="90" cy="90" r="75" fill="none" stroke="#fbbf24" stroke-width="12"
+                                    stroke-dasharray="471" stroke-dashoffset="85"
+                                    stroke-linecap="round" transform="rotate(-90 90 90)"/>
+                        </svg>
+                        <div class="position-absolute top-50 start-50 translate-middle">
+                            <span class="score">82</span>
+                            <span class="label d-block">/ 100</span>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge-gold">Good</span>
+                        <p class="text-muted small mt-2">Based on NPK levels, pH, and organic matter</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="text-soilwise">Nutrient Breakdown</h5>
+                    <div class="d-flex justify-content-between border-bottom py-2">
+                        <span><i class="fas fa-circle text-success me-2"></i>Nitrogen (N)</span>
+                        <span class="fw-bold">42 ppm</span>
+                    </div>
+                    <div class="d-flex justify-content-between border-bottom py-2">
+                        <span><i class="fas fa-circle text-primary me-2"></i>Phosphorus (P)</span>
+                        <span class="fw-bold">28 ppm</span>
+                    </div>
+                    <div class="d-flex justify-content-between border-bottom py-2">
+                        <span><i class="fas fa-circle text-warning me-2"></i>Potassium (K)</span>
+                        <span class="fw-bold">35 ppm</span>
+                    </div>
+                    <div class="d-flex justify-content-between py-2">
+                        <span><i class="fas fa-circle text-danger me-2"></i>pH Level</span>
+                        <span class="fw-bold">6.8 (Neutral)</span>
+                    </div>
+                    <div class="mt-3">
+                        {% if recent_tests %}
+                            <a href="{% url 'test_result' recent_tests.first.id %}" class="btn btn-gold w-100">
+                                <i class="fas fa-flask me-2"></i>View Full Report
+                            </a>
+                        {% else %}
+                            <a href="#" class="btn btn-gold w-100 disabled">
+                                <i class="fas fa-flask me-2"></i>No Results Yet
+                            </a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Fertilizer Cost Calculator -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h5 class="text-soilwise"><i class="fas fa-calculator me-2"></i>Fertilizer Cost Calculator</h5>
+            <div class="row align-items-end">
+                <div class="col-md-3">
+                    <label class="form-label">Crop Type</label>
+                    <select class="form-select" id="cropType">
+                        <option value="maize">Maize</option>
+                        <option value="cassava">Cassava</option>
+                        <option value="rice">Rice</option>
+                        <option value="yam">Yam</option>
+                        <option value="tomato">Tomato</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Farm Size (hectares)</label>
+                    <input type="number" class="form-control" id="farmSize" value="2" min="0.5" step="0.5">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">NPK Ratio</label>
+                    <select class="form-select" id="npkRatio">
+                        <option value="15:15:15">15:15:15</option>
+                        <option value="20:10:10">20:10:10</option>
+                        <option value="12:12:17">12:12:17</option>
+                        <option value="10:20:10">10:20:10</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <button class="btn btn-gold w-100" onclick="calculateCost()">
+                        <i class="fas fa-calculator me-2"></i>Calculate Savings
+                    </button>
+                </div>
+            </div>
+            <div id="calculatorResult" class="mt-3" style="display: none;">
+                <div class="alert alert-success">
+                    <h6 class="mb-1">💰 You could save <strong id="savingsAmount">₦30,000</strong> this season</h6>
+                    <p class="mb-0 small">By using the recommended NPK ratio instead of guessing</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test History -->
+    <div class="card shadow">
+        <div class="card-header bg-soilwise text-white">
+            <h5 class="mb-0"><i class="fas fa-history me-2"></i>Test History</h5>
+        </div>
+        <div class="card-body">
+            {% if recent_tests %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Farm</th>
+                                <th>Barcode</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for test in recent_tests %}
+                            <tr>
+                                <td>{{ test.farm.name }}</td>
+                                <td><code>{{ test.barcode }}</code></td>
+                                <td>
+                                    <span class="badge-status 
+                                        {% if test.status == 'pending' %}badge-pending
+                                        {% elif test.status == 'collected' %}badge-collected
+                                        {% elif test.status == 'in_transit' %}badge-warning
+                                        {% elif test.status == 'at_lab' %}badge-info
+                                        {% elif test.status == 'testing' %}badge-primary
+                                        {% elif test.status == 'results_ready' %}badge-results
+                                        {% elif test.status == 'completed' %}badge-success
+                                        {% else %}badge-failed{% endif %}">
+                                        {{ test.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>{{ test.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <!-- View Button - ALWAYS VISIBLE -->
+                                    <a href="{% url 'test_result' test.id %}" class="btn btn-sm btn-outline-soilwise">
+                                        <i class="fas fa-eye"></i> View
+                                    </a>
+
+                                    <!-- Buy Fertilizer Button for Results Ready Tests -->
+                                    {% if test.status == 'results_ready' %}
+                                        <a href="{% url 'marketplace' test.id %}" class="btn btn-sm btn-gold">
+                                            <i class="fas fa-shopping-cart me-1"></i>Buy
+                                        </a>
+                                    {% endif %}
+
+                                    <!-- Pay Now Button for Pending Tests -->
+                                    {% if test.status == 'pending' %}
+                                        <a href="{% url 'initiate_payment' test.id %}" class="btn btn-sm btn-success">
+                                            <i class="fas fa-credit-card me-1"></i>Pay Now
+                                        </a>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-flask" style="font-size: 3rem; color: #ccc;"></i>
+                    <p class="mt-2">No tests yet.</p>
+                    <a href="{% url 'request_test' %}" class="btn btn-gold">Request Your First Test</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<script>
+function calculateCost() {
+    const crop = document.getElementById('cropType').value;
+    const size = parseFloat(document.getElementById('farmSize').value) || 1;
+    const npk = document.getElementById('npkRatio').value;
+    
+    let baseSavings = 25000;
+    let cropMultiplier = {
+        'maize': 1.2,
+        'cassava': 1.0,
+        'rice': 1.3,
+        'yam': 1.4,
+        'tomato': 1.8
+    };
+    
+    let savings = baseSavings * size * (cropMultiplier[crop] || 1.0);
+    let resultDiv = document.getElementById('calculatorResult');
+    let savingsSpan = document.getElementById('savingsAmount');
+    
+    savingsSpan.textContent = '₦' + Math.round(savings / 1000) + 'k';
+    resultDiv.style.display = 'block';
+}
+</script>
+{% endblock %}

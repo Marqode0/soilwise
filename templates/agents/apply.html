@@ -1,0 +1,122 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Apply to Become an Agent – SoilWise{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-7">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-user-tie text-soilwise" style="font-size: 3rem;"></i>
+                        <h2 class="text-soilwise mt-2">Become an Agent</h2>
+                        <p class="text-muted">Join our network of collection agents</p>
+                    </div>
+
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>What you'll do:</strong> Collect soil samples from farmers, deliver to labs, and earn ₦200 commission on every test.
+                    </div>
+
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            Please correct the errors below.
+                        </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Agent Display Name</label>
+                            {{ form.display_name }}
+                            {% if form.display_name.errors %}
+                            <div class="text-danger small">{{ form.display_name.errors }}</div>
+                            {% endif %}
+                            <small class="text-muted">This name will appear on your agent profile (e.g., Summer, Agent007)</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Gender</label>
+                            {{ form.gender }}
+                            {% if form.gender.errors %}
+                            <div class="text-danger small">{{ form.gender.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            {{ form.full_name }}
+                            {% if form.full_name.errors %}
+                            <div class="text-danger small">{{ form.full_name.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Phone Number</label>
+                            {{ form.phone_number }}
+                            {% if form.phone_number.errors %}
+                            <div class="text-danger small">{{ form.phone_number.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            {{ form.location }}
+                            {% if form.location.errors %}
+                            <div class="text-danger small">{{ form.location.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">NIN (National Identification Number)</label>
+                            {{ form.nin }}
+                            {% if form.nin.errors %}
+                            <div class="text-danger small">{{ form.nin.errors }}</div>
+                            {% endif %}
+                            <small class="text-muted">11-digit NIN required for verification.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Farming/Agricultural Experience</label>
+                            {{ form.experience }}
+                            {% if form.experience.errors %}
+                            <div class="text-danger small">{{ form.experience.errors }}</div>
+                            {% endif %}
+                            <small class="text-muted">Tell us about your experience with farming, soil, or agriculture.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Education & Qualifications</label>
+                            {{ form.education }}
+                            {% if form.education.errors %}
+                            <div class="text-danger small">{{ form.education.errors }}</div>
+                            {% endif %}
+                            <small class="text-muted">List any relevant degrees, certifications, or training.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Why do you want to become an agent?</label>
+                            {{ form.reason }}
+                            {% if form.reason.errors %}
+                            <div class="text-danger small">{{ form.reason.errors }}</div>
+                            {% endif %}
+                        </div>
+
+                        <button type="submit" class="btn btn-gold w-100 py-2">
+                            <i class="fas fa-paper-plane me-2"></i>Submit Application
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="{% url 'home' %}" class="text-soilwise">Back to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

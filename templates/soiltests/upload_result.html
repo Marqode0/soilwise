@@ -1,0 +1,83 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Upload Results – SoilWise{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <h2 class="text-soilwise text-center mb-4">
+                        <i class="fas fa-flask me-2"></i>Upload Test Results
+                    </h2>
+                    <p class="text-muted text-center mb-4">
+                        Enter soil analysis results for sample: <strong>{{ sample.barcode }}</strong>
+                    </p>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Nitrogen (N) ppm</label>
+                                <input type="number" step="0.1" name="nitrogen" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phosphorus (P) ppm</label>
+                                <input type="number" step="0.1" name="phosphorus" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Potassium (K) ppm</label>
+                                <input type="number" step="0.1" name="potassium" class="form-control" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">pH Level</label>
+                                <input type="number" step="0.1" name="ph_level" class="form-control" required>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Organic Matter (%)</label>
+                            <input type="number" step="0.1" name="organic_matter" class="form-control">
+                        </div>
+
+                        <hr>
+
+                        <h5 class="text-soilwise">Recommendations</h5>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">NPK Ratio</label>
+                                <select name="npk_ratio" class="form-control" required>
+                                    <option value="10:10:10">10:10:10</option>
+                                    <option value="15:15:15" selected>15:15:15</option>
+                                    <option value="20:10:10">20:10:10</option>
+                                    <option value="12:12:17">12:12:17</option>
+                                    <option value="10:20:10">10:20:10</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Bags per Hectare</label>
+                                <input type="number" name="bags" class="form-control" value="2" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-gold w-100 py-2">
+                            <i class="fas fa-upload me-2"></i>Upload Results
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="{% url 'lab_dashboard' %}" class="text-soilwise">Back to Lab Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

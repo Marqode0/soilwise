@@ -1,0 +1,111 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Test Result – SoilWise{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="text-soilwise"><i class="fas fa-file-alt me-2"></i>Soil Test Result</h2>
+                <button onclick="window.print()" class="btn btn-outline-gold">
+                    <i class="fas fa-print me-2"></i>Print
+                </button>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <p><strong>Farm:</strong> {{ sample.farm.name }}</p>
+                    <p><strong>Location:</strong> {{ sample.farm.location }}</p>
+                    <p><strong>Sample Barcode:</strong> <code>{{ sample.barcode }}</code></p>
+                    <p><strong>Test Date:</strong> {{ sample.result.tested_at|date:"M d, Y" }}</p>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <span class="badge-gold">Results Ready</span>
+                </div>
+            </div>
+
+            <hr>
+
+            <h5 class="text-soilwise">Nutrient Analysis</h5>
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <span>Nitrogen (N)</span>
+                                <span class="fw-bold">{{ sample.result.nitrogen_ppm }} ppm</span>
+                            </div>
+                            <div class="progress mt-1" style="height: 8px;">
+                                <div class="progress-bar bg-success" style="width: 70%;"></div>
+                            </div>
+                            <small class="text-muted">Optimal range: 30-50 ppm</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <span>Phosphorus (P)</span>
+                                <span class="fw-bold">{{ sample.result.phosphorus_ppm }} ppm</span>
+                            </div>
+                            <div class="progress mt-1" style="height: 8px;">
+                                <div class="progress-bar bg-primary" style="width: 60%;"></div>
+                            </div>
+                            <small class="text-muted">Optimal range: 20-40 ppm</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <span>Potassium (K)</span>
+                                <span class="fw-bold">{{ sample.result.potassium_ppm }} ppm</span>
+                            </div>
+                            <div class="progress mt-1" style="height: 8px;">
+                                <div class="progress-bar bg-warning" style="width: 65%;"></div>
+                            </div>
+                            <small class="text-muted">Optimal range: 30-50 ppm</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card bg-light">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between">
+                                <span>pH Level</span>
+                                <span class="fw-bold">{{ sample.result.ph_level }}</span>
+                            </div>
+                            <div class="progress mt-1" style="height: 8px;">
+                                <div class="progress-bar bg-success" style="width: 80%;"></div>
+                            </div>
+                            <small class="text-muted">Optimal range: 6.0-7.0 (Neutral)</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr>
+
+            <h5 class="text-soilwise">Recommendations</h5>
+            <div class="alert alert-success">
+                <h6>🌱 NPK Ratio: <strong>{{ sample.result.recommendations.npk_ratio }}</strong></h6>
+                <p class="mb-1">Apply <strong>{{ sample.result.recommendations.bags_per_hectare }} bags per hectare</strong> at planting.</p>
+                <p class="mb-0 small">Estimated cost: ₦30,000 per hectare</p>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="/marketplace/{{ sample.id }}/" class="btn btn-gold">
+                    <i class="fas fa-shopping-cart me-2"></i>Buy Recommended Fertilizer
+                </a>
+                <a href="{% url 'farmer_dashboard' user.id %}" class="btn btn-outline-gold ms-2">
+                    <i class="fas fa-home me-2"></i>Back to Dashboard
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,387 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Home – SoilWise{% endblock %}
+
+{% block content %}
+
+<!-- ===== HERO ===== -->
+<section class="hero-gradient">
+    <div class="container position-relative">
+        <div class="row align-items-center min-vh-75">
+            <div class="col-lg-6 text-white">
+                <h1>Know Your Soil.<br>Grow More Food.</h1>
+                <p class="subtitle">Get precise fertilizer recommendations for just ₦2,000. Stop guessing, start thriving.</p>
+                <div class="mt-4 d-flex flex-wrap gap-3">
+                    <a href="#" class="btn btn-gold btn-lg pulse-animation">
+                        <i class="fas fa-flask me-2"></i>Request a Test
+                    </a>
+                    <a href="#how-it-works" class="btn btn-outline-gold btn-lg">
+                        <i class="fas fa-play me-2"></i>How It Works
+                    </a>
+                </div>
+                <div class="mt-5 d-flex gap-4">
+                    <div>
+                        <span class="stat-number" data-count="2500">0</span><span class="stat-number">+</span>
+                        <div class="text-white-50" style="font-size:0.9rem;">Farmers Served</div>
+                    </div>
+                    <div>
+                        <span class="stat-number" data-count="40">0</span><span class="stat-number">%</span>
+                        <div class="text-white-50" style="font-size:0.9rem;">Avg. Yield Increase</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 text-center d-none d-lg-block">
+                <i class="fas fa-seedling hero-image"></i>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== WHY SOILWISE ===== -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <h2 class="text-center text-soilwise mb-5">Why Nigerian Farmers Choose SoilWise</h2>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="feature-card fade-in-up">
+                    <div class="icon"><i class="fas fa-brain"></i></div>
+                    <h4>AI‑Powered Recommendations</h4>
+                    <p>Our system learns from thousands of tests to give you precise NPK ratios—no more guesswork.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card fade-in-up">
+                    <div class="icon"><i class="fas fa-hand-holding-usd"></i></div>
+                    <h4>Save ₦30,000+ Per Season</h4>
+                    <p>Stop wasting money on wrong fertilizers. Our tests pay for themselves many times over.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="feature-card fade-in-up">
+                    <div class="icon"><i class="fas fa-map-marked-alt"></i></div>
+                    <h4>Nigeria's First Soil Intelligence Map</h4>
+                    <p>Every test adds to our growing map—giving you regional insights that no other service offers.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section id="how-it-works" class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center text-soilwise mb-5">How SoilWise Works</h2>
+        <div class="row g-4 align-items-stretch">
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card fade-in-up">
+                    <div class="icon"><i class="fas fa-phone-alt"></i></div>
+                    <h4>1. Request</h4>
+                    <p>Request a test via USSD, WhatsApp, or our web platform.</p>
+                </div>
+            </div>
+            <div class="col-lg-1 d-none d-lg-flex justify-content-center feature-arrow">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card fade-in-up">
+                    <div class="icon"><i class="fas fa-trowel"></i></div>
+                    <h4>2. Collect</h4>
+                    <p>Our agent visits, collects soil sample with your branded kit.</p>
+                </div>
+            </div>
+            <div class="col-lg-1 d-none d-lg-flex justify-content-center feature-arrow">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card fade-in-up">
+                    <div class="icon"><i class="fas fa-flask"></i></div>
+                    <h4>3. Test</h4>
+                    <p>Sample analyzed in our partner or central lab.</p>
+                </div>
+            </div>
+            <div class="col-lg-1 d-none d-lg-flex justify-content-center feature-arrow">
+                <i class="fas fa-arrow-right"></i>
+            </div>
+            <div class="col-lg-3 col-md-6">
+                <div class="feature-card fade-in-up">
+                    <div class="icon"><i class="fas fa-chart-line"></i></div>
+                    <h4>4. Result</h4>
+                    <p>Get SMS & dashboard report with precise NPK recommendations.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== SOIL INTELLIGENCE MAP ===== -->
+<section id="map" class="py-5">
+    <div class="container">
+        <h2 class="text-center text-soilwise mb-4">Soil Intelligence Map</h2>
+        <p class="text-center text-muted mb-4">Live data from tests across Nigeria. Hover for region insights.</p>
+        <div id="soil-map" style="height: 400px; border-radius: 20px; overflow: hidden;"></div>
+    </div>
+</section>
+
+<!-- ===== TRUSTED BY ===== -->
+<section class="py-4 bg-light">
+    <div class="container text-center">
+        <p class="text-muted mb-3">Trusted by farmers, cooperatives, and agribusinesses</p>
+        <div class="d-flex flex-wrap justify-content-center gap-5 align-items-center">
+            <div class="text-center">
+                <i class="fas fa-building fa-3x text-secondary" style="opacity: 0.6;"></i>
+                <div class="small text-muted mt-1">AgroAlliance</div>
+            </div>
+            <div class="text-center">
+                <i class="fas fa-tractor fa-3x text-secondary" style="opacity: 0.6;"></i>
+                <div class="small text-muted mt-1">Farmers Co-op</div>
+            </div>
+            <div class="text-center">
+                <i class="fas fa-seedling fa-3x text-secondary" style="opacity: 0.6;"></i>
+                <div class="small text-muted mt-1">Green Grow</div>
+            </div>
+            <div class="text-center">
+                <i class="fas fa-handshake fa-3x text-secondary" style="opacity: 0.6;"></i>
+                <div class="small text-muted mt-1">AgriPartners</div>
+            </div>
+            <div class="text-center">
+                <i class="fas fa-university fa-3x text-secondary" style="opacity: 0.6;"></i>
+                <div class="small text-muted mt-1">NAFCON</div>
+            </div>
+            <div class="text-center">
+                <i class="fas fa-leaf fa-3x text-secondary" style="opacity: 0.6;"></i>
+                <div class="small text-muted mt-1">EcoFarm</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== STATS SECTION ===== -->
+<section class="bg-soilwise py-5">
+    <div class="container">
+        <div class="row text-center">
+            <div class="col-md-3">
+                <div class="stat-number" data-count="2500">0</div>
+                <div class="stat-label">Farmers Served</div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-number" data-count="40">0</div>
+                <div class="stat-label">Avg. Yield Increase</div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-number" data-count="30000">0</div>
+                <div class="stat-label">₦ Saved Per Farmer</div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-number" data-count="98">0</div>
+                <div class="stat-label">Satisfaction Rate</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== TESTIMONIAL CAROUSEL ===== -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <h2 class="text-center text-soilwise mb-4">Real Stories from Real Farmers</h2>
+        <div id="testimonialCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card shadow-sm p-4 text-center">
+                                <i class="fas fa-quote-left text-soilwise fa-2x mb-3"></i>
+                                <p class="lead">"SoilWise helped me save ₦50,000 on fertilizer. My maize yield improved by 45% this season!"</p>
+                                <div class="d-flex align-items-center justify-content-center mt-3">
+                                    <div class="bg-soilwise rounded-circle p-3 text-white me-3">
+                                        <i class="fas fa-user fa-2x"></i>
+                                    </div>
+                                    <div class="text-start">
+                                        <strong>Chidi Okonkwo</strong>
+                                        <div class="small text-muted">Maize Farmer, Kaduna</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card shadow-sm p-4 text-center">
+                                <i class="fas fa-quote-left text-soilwise fa-2x mb-3"></i>
+                                <p class="lead">"The recommendations were spot on. My cassava farm has never looked this healthy!"</p>
+                                <div class="d-flex align-items-center justify-content-center mt-3">
+                                    <div class="bg-soilwise rounded-circle p-3 text-white me-3">
+                                        <i class="fas fa-user fa-2x"></i>
+                                    </div>
+                                    <div class="text-start">
+                                        <strong>Fatima Bello</strong>
+                                        <div class="small text-muted">Cassava Farmer, Oyo</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="carousel-item">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8">
+                            <div class="card shadow-sm p-4 text-center">
+                                <i class="fas fa-quote-left text-soilwise fa-2x mb-3"></i>
+                                <p class="lead">"Finally, a soil testing service that understands the Nigerian farmer. Highly recommended!"</p>
+                                <div class="d-flex align-items-center justify-content-center mt-3">
+                                    <div class="bg-soilwise rounded-circle p-3 text-white me-3">
+                                        <i class="fas fa-user fa-2x"></i>
+                                    </div>
+                                    <div class="text-start">
+                                        <strong>Emeka Okafor</strong>
+                                        <div class="small text-muted">Mixed Crop Farmer, Enugu</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon bg-soilwise rounded-circle p-3" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#testimonialCarousel" data-bs-slide="next">
+                <span class="carousel-control-next-icon bg-soilwise rounded-circle p-3" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- ===== FAQ ACCORDION ===== -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <h2 class="text-center text-soilwise mb-4">Frequently Asked Questions</h2>
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="accordion" id="faqAccordion">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                                How much does a soil test cost?
+                            </button>
+                        </h2>
+                        <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Only <strong>₦2,000</strong> per test. This includes collection, lab analysis, and a detailed recommendation report sent via SMS and your dashboard.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                                How long does it take to get results?
+                            </button>
+                        </h2>
+                        <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Typically <strong>3–5 business days</strong> from sample collection. You'll receive an SMS immediately when your results are ready.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                                How do I request a test if I don't have a smartphone?
+                            </button>
+                        </h2>
+                        <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                You can request via <strong>USSD</strong> (dial *344#) or WhatsApp. Our agent will visit your farm to collect the sample.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                                What happens if I follow the recommendation?
+                            </button>
+                        </h2>
+                        <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Farmers who follow our NPK recommendations typically see a <strong>30–50% increase</strong> in yield. Plus, you save money by buying exactly what your soil needs.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                                Can I become a collection agent?
+                            </button>
+                        </h2>
+                        <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                            <div class="accordion-body">
+                                Yes! We're building a network of agents across Nigeria. <a href="#" class="text-soilwise">Apply here</a> to join and earn commissions on every sample you collect.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="py-5 text-center" style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">
+    <div class="container">
+        <h2 class="text-dark">Ready to Transform Your Farm?</h2>
+        <p class="lead text-dark">Join thousands of farmers already using SoilWise</p>
+        <a href="#" class="btn btn-dark btn-lg pulse-animation">
+            <i class="fas fa-flask me-2"></i>Get Started Today
+        </a>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize map centered on Nigeria
+    var map = L.map('soil-map').setView([9.0820, 8.6753], 6);
+    
+    // Add tile layer
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+    
+    // Sample data points (Nigeria)
+    var locations = [
+        { lat: 10.5236, lng: 7.4375, region: 'Kaduna', tests: 150, ph: 6.8 },
+        { lat: 7.3776, lng: 3.9470, region: 'Ibadan', tests: 120, ph: 6.2 },
+        { lat: 6.5244, lng: 7.4900, region: 'Enugu', tests: 95, ph: 5.9 },
+        { lat: 12.0022, lng: 8.5910, region: 'Kano', tests: 80, ph: 7.1 },
+        { lat: 4.8156, lng: 7.0498, region: 'Port Harcourt', tests: 65, ph: 5.5 },
+        { lat: 9.0234, lng: 6.8735, region: 'Minna', tests: 55, ph: 6.3 },
+        { lat: 8.6753, lng: 9.0820, region: 'Jos', tests: 45, ph: 6.0 },
+        { lat: 6.4531, lng: 3.3958, region: 'Lagos', tests: 40, ph: 6.5 },
+    ];
+    
+    // Add markers
+    locations.forEach(function(loc) {
+        var marker = L.circleMarker([loc.lat, loc.lng], {
+            radius: 10,
+            color: '#1a5e2a',
+            weight: 2,
+            opacity: 0.8,
+            fillColor: '#fbbf24',
+            fillOpacity: 0.6
+        }).addTo(map);
+        
+        marker.bindPopup(`
+            <strong>${loc.region}</strong><br>
+            Tests: ${loc.tests}<br>
+            Avg. pH: ${loc.ph}
+        `);
+    });
+});
+</script>
+{% endblock %}

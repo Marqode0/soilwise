@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Withdraw – SoilWise{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <h2 class="text-soilwise text-center mb-4">
+                        <i class="fas fa-hand-holding-usd me-2"></i>Withdraw Earnings
+                    </h2>
+
+                    <div class="alert alert-info">
+                        <strong>Available Balance:</strong> ₦{{ profile.total_earnings }}
+                        <br>
+                        <strong>Minimum Withdrawal:</strong> ₦{{ withdrawal_minimum }}
+                    </div>
+
+                    <form method="post">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Amount to Withdraw</label>
+                            <input type="number" name="amount" class="form-control" min="{{ withdrawal_minimum }}" max="{{ profile.total_earnings }}" placeholder="Enter amount" required>
+                            <small class="text-muted">Minimum: ₦{{ withdrawal_minimum }}</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Bank Name</label>
+                            <input type="text" name="bank_name" class="form-control" placeholder="e.g., GTBank" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Account Number</label>
+                            <input type="text" name="account_number" class="form-control" placeholder="0123456789" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Account Name</label>
+                            <input type="text" name="account_name" class="form-control" placeholder="Full name on account" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-gold w-100 py-2">
+                            <i class="fas fa-paper-plane me-2"></i>Submit Withdrawal Request
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="{% url 'agent_dashboard' %}" class="text-soilwise">Back to Dashboard</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

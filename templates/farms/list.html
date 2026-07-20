@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Farms – SoilWise{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-soilwise"><i class="fas fa-tractor me-2"></i>My Farms</h1>
+        <a href="{% url 'add_farm' %}" class="btn btn-gold">
+            <i class="fas fa-plus me-2"></i>Add Farm
+        </a>
+    </div>
+
+    {% if farms %}
+        <div class="row g-3">
+            {% for farm in farms %}
+            <div class="col-md-4">
+                <div class="card shadow-sm">
+                    <div class="card-body">
+                        <h5 class="text-soilwise">{{ farm.name }}</h5>
+                        <p class="text-muted small">
+                            <i class="fas fa-map-pin me-1"></i>{{ farm.location }}<br>
+                            <i class="fas fa-ruler me-1"></i>{{ farm.size_hectares }} hectares<br>
+                            <i class="fas fa-seedling me-1"></i>{{ farm.primary_crop }}
+                        </p>
+                        <a href="#" class="btn btn-sm btn-outline-gold">View Tests</a>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-tractor" style="font-size: 3rem; color: #ccc;"></i>
+            <p class="mt-2">You haven't added any farms yet.</p>
+            <a href="{% url 'add_farm' %}" class="btn btn-gold">Add Your First Farm</a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,310 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>{% block title %}SoilWise – Smart Farming{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Font Awesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}" />
+
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+    <!-- Django Messages (hidden, used for toasts) -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="django-message" data-type="{{ message.tags }}" style="display: none;">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+
+    <!-- ====== NAVIGATION ====== -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-soilwise fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="{% url 'home' %}">
+                <i class="fas fa-seedling me-2"></i>Soil<span class="text-gold">Wise</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto align-items-lg-center">
+                    <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
+                    
+                    <!-- How It Works & Soil Map - Show for logged out users or farmers -->
+                    {% if not user.is_authenticated or user.role == 'farmer' %}
+                        <li class="nav-item"><a class="nav-link" href="#how-it-works">How It Works</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#map">Soil Map</a></li>
+                    {% endif %}
+                    
+                    {% if user.is_authenticated %}
+                        <!-- User Dropdown -->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user-circle"></i> {{ user.username }}
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-end">
+                                
+                                <!-- SUPERUSER / ADMIN LINKS -->
+                                {% if user.is_superuser %}
+                                    <li><a class="dropdown-item" href="/admin/">
+                                        <i class="fas fa-cog me-2"></i>Admin Panel
+                                    </a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                {% endif %}
+
+                                <!-- FARMER LINKS -->
+                                {% if user.role == 'farmer' %}
+                                    <li><a class="dropdown-item" href="{% url 'farmer_dashboard' user.id %}">
+                                        <i class="fas fa-tachometer-alt me-2"></i>Dashboard
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'farm_list' %}">
+                                        <i class="fas fa-tractor me-2"></i>My Farms
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'request_test' %}">
+                                        <i class="fas fa-flask me-2"></i>Request Test
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'my_orders' %}">
+                                        <i class="fas fa-box me-2"></i>My Orders
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'payment_history' %}">
+                                        <i class="fas fa-credit-card me-2"></i>Payments
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'apply_agent' %}">
+                                        <i class="fas fa-user-tie me-2"></i>Become an Agent
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'apply_labtech' %}">
+                                        <i class="fas fa-microscope me-2"></i>Become a Lab Tech
+                                    </a></li>
+                                {% endif %}
+
+                                <!-- AGENT LINKS -->
+                                {% if user.role == 'agent' %}
+                                    <li><a class="dropdown-item" href="{% url 'agent_dashboard' %}">
+                                        <i class="fas fa-user-tie me-2"></i>Agent Dashboard
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'my_kits' %}">
+                                        <i class="fas fa-box me-2"></i>My Kits
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'my_collections' %}">
+                                        <i class="fas fa-flask me-2"></i>My Collections
+                                    </a></li>
+                                {% endif %}
+
+                                <!-- LAB TECH LINKS -->
+                                {% if user.role == 'lab_tech' %}
+                                    <li><a class="dropdown-item" href="{% url 'lab_dashboard' %}">
+                                        <i class="fas fa-microscope me-2"></i>Lab Dashboard
+                                    </a></li>
+                                    <li><a class="dropdown-item" href="{% url 'pending_tests' %}">
+                                        <i class="fas fa-list me-2"></i>Pending Tests
+                                    </a></li>
+                                {% endif %}
+
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item text-danger" href="{% url 'logout' %}">
+                                    <i class="fas fa-sign-out-alt me-2"></i>Logout
+                                </a></li>
+                            </ul>
+                        </li>
+
+                        <!-- Request Test Button (Farmers Only) -->
+                        {% if user.role == 'farmer' %}
+                            <li class="nav-item">
+                                <a href="{% url 'request_test' %}" class="btn btn-gold btn-sm ms-lg-2 pulse-animation">Request Test</a>
+                            </li>
+                        {% endif %}
+
+                    {% else %}
+                        <!-- Logged Out Users -->
+                        <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
+                        <li class="nav-item"><a class="nav-link" href="{% url 'register' %}">Register</a></li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ====== MAIN CONTENT ====== -->
+    <main class="pt-5 mt-4">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ====== FOOTER ====== -->
+    <footer class="bg-dark text-white-50 py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4">
+                    <h5 class="text-white"><i class="fas fa-seedling text-gold"></i> SoilWise</h5>
+                    <p class="small">Making farming smarter across Nigeria with data-driven soil insights.</p>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-white">Quick Links</h6>
+                    <ul class="list-unstyled small">
+                        <li><a href="#" class="text-white-50 text-decoration-none">About</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">How It Works</a></li>
+                        <li><a href="#" class="text-white-50 text-decoration-none">For Agents</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4">
+                    <h6 class="text-white">Contact</h6>
+                    <p class="small mb-1"><i class="fas fa-phone me-2"></i>+234 800 123 4567</p>
+                    <p class="small"><i class="fas fa-envelope me-2"></i>info@soilwise.ng</p>
+                </div>
+            </div>
+            <div class="border-top border-secondary pt-3 mt-3 text-center">
+                <p class="small mb-0">&copy; 2025 SoilWise Nigeria. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Back to Top Button -->
+    <button onclick="scrollToTop()" id="backToTopBtn" class="btn btn-gold">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Custom JS -->
+    <script src="{% static 'js/main.js' %}"></script>
+    
+    <script>
+        // Toast notification system
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            if (!container) return;
+            
+            const toast = document.createElement('div');
+            toast.className = 'toast-custom';
+            
+            const icons = {
+                success: 'fa-check-circle',
+                error: 'fa-exclamation-circle',
+                info: 'fa-info-circle',
+                warning: 'fa-exclamation-triangle'
+            };
+            
+            toast.innerHTML = `
+                <i class="fas ${icons[type] || icons.info} me-2"></i>
+                ${message}
+            `;
+            
+            if (type === 'error') {
+                toast.style.background = '#dc3545';
+            } else if (type === 'warning') {
+                toast.style.background = '#ffc107';
+                toast.style.color = '#212529';
+            } else if (type === 'info') {
+                toast.style.background = '#17a2b8';
+            }
+            
+            container.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(-20px)';
+                setTimeout(() => toast.remove(), 500);
+            }, 4000);
+        }
+
+        // Auto-show Django messages
+        document.addEventListener('DOMContentLoaded', function() {
+            const messages = document.querySelectorAll('.django-message');
+            messages.forEach(msg => {
+                const type = msg.dataset.type || 'info';
+                showToast(msg.textContent, type);
+            });
+        });
+
+        // Show/hide back to top button
+        window.addEventListener('scroll', function() {
+            const btn = document.getElementById('backToTopBtn');
+            if (window.scrollY > 300) {
+                btn.style.display = 'block';
+            } else {
+                btn.style.display = 'none';
+            }
+        });
+        
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Counter animation
+        document.addEventListener('DOMContentLoaded', function() {
+            const counters = document.querySelectorAll('.stat-number[data-count]');
+            const speed = 100;
+
+            const animateCounter = (el) => {
+                const target = parseInt(el.getAttribute('data-count'));
+                const duration = 2000;
+                const stepTime = 20;
+                const steps = duration / stepTime;
+                const increment = target / steps;
+                let current = 0;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        el.textContent = Math.floor(target);
+                        clearInterval(timer);
+                    } else {
+                        el.textContent = Math.floor(current);
+                    }
+                }, stepTime);
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const el = entry.target;
+                        if (!el.classList.contains('counted')) {
+                            el.classList.add('counted');
+                            animateCounter(el);
+                        }
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            counters.forEach(counter => observer.observe(counter));
+
+            // Fade-in-up on scroll
+            const fadeElements = document.querySelectorAll('.fade-in-up');
+            const fadeObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, { threshold: 0.1 });
+            fadeElements.forEach(el => fadeObserver.observe(el));
+        });
+    </script>
+    
+    {% block extra_js %}{% endblock %}
+</body>
+</html>

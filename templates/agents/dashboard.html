@@ -1,0 +1,174 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Agent Dashboard – SoilWise{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="text-soilwise"><i class="fas fa-user-tie me-2"></i>Agent Dashboard</h1>
+    <p class="text-muted">Welcome, <strong>{{ display_name }}</strong></p>
+
+    <!-- Agent ID & Display Name Display -->
+    <div class="alert alert-success">
+        <strong><i class="fas fa-id-card me-2"></i>Your Agent ID:</strong> {{ agent_id|default:"Not assigned yet" }}
+        <span class="ms-3"><strong>Display Name:</strong> {{ display_name|default:"Not set" }}</span>
+        <span class="ms-3"><strong>Commission per sample:</strong> ₦{{ commission_per_sample }}</span>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card bg-warning text-dark text-center shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-clock fa-2x mb-2"></i>
+                    <h5 class="card-title">Pending Collections</h5>
+                    <h2 class="display-6">{{ pending_count|default:"0" }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-success text-white text-center shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-check-circle fa-2x mb-2"></i>
+                    <h5 class="card-title">Collected</h5>
+                    <h2 class="display-6">{{ collected_count|default:"0" }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-soilwise text-white text-center shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-flask fa-2x mb-2"></i>
+                    <h5 class="card-title">Total Collections</h5>
+                    <h2 class="display-6">{{ total_samples|default:"0" }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="card bg-gold text-dark text-center shadow-sm" style="background: #fbbf24;">
+                <div class="card-body">
+                    <i class="fas fa-money-bill-wave fa-2x mb-2"></i>
+                    <h5 class="card-title">Total Earnings</h5>
+                    <h2 class="display-6">₦{{ total_earnings|default:"0" }}</h2>
+                    {% if can_withdraw %}
+                        <a href="{% url 'request_withdrawal' %}" class="btn btn-sm btn-dark mt-2">
+                            <i class="fas fa-hand-holding-usd me-1"></i>Withdraw
+                        </a>
+                    {% else %}
+                        <small class="d-block mt-1 text-dark">Min. ₦{{ withdrawal_minimum }} to withdraw</small>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Ready for Collection -->
+    <div class="card shadow mb-4">
+        <div class="card-header bg-warning text-dark">
+            <h5 class="mb-0"><i class="fas fa-clock me-2"></i>Ready for Collection</h5>
+            <small class="text-muted">These samples need to be physically collected</small>
+        </div>
+        <div class="card-body">
+            {% if ready_for_collection %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Barcode</th>
+                                <th>Farm</th>
+                                <th>Farmer</th>
+                                <th>Location</th>
+                                <th>Date Requested</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sample in ready_for_collection %}
+                            <tr>
+                                <td><code>{{ sample.barcode }}</code></td>
+                                <td>{{ sample.farm.name }}</td>
+                                <td>{{ sample.farm.farmer.username }}</td>
+                                <td>{{ sample.collection_location|default:sample.farm.location }}</td>
+                                <td>{{ sample.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a href="{% url 'collect_sample_form' sample.id %}" class="btn btn-sm btn-success">
+                                        <i class="fas fa-trowel me-1"></i>Collect Sample
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-check-circle" style="font-size: 3rem; color: #28a745;"></i>
+                    <p class="mt-2">No samples ready for collection.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Collected Samples -->
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h5 class="mb-0"><i class="fas fa-check-circle me-2"></i>Collected Samples</h5>
+            <small class="text-muted">Samples you have collected or marked as in transit</small>
+        </div>
+        <div class="card-body">
+            {% if collected_samples %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Barcode</th>
+                                <th>Farm</th>
+                                <th>Farmer</th>
+                                <th>Collection Date</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sample in collected_samples %}
+                            <tr>
+                                <td><code>{{ sample.barcode }}</code></td>
+                                <td>{{ sample.farm.name }}</td>
+                                <td>{{ sample.farm.farmer.username }}</td>
+                                <td>{{ sample.collection_date|date:"M d, Y H:i"|default:"-" }}</td>
+                                <td>{{ sample.collection_location|default:"N/A" }}</td>
+                                <td>
+                                    <span class="badge-status 
+                                        {% if sample.status == 'collected' %}badge-collected
+                                        {% elif sample.status == 'in_transit' %}badge-warning
+                                        {% else %}badge-failed{% endif %}">
+                                        {{ sample.get_status_display }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if sample.status == 'collected' %}
+                                        <a href="{% url 'mark_in_transit' sample.id %}" class="btn btn-sm btn-primary">
+                                            <i class="fas fa-truck me-1"></i>Mark as In Transit
+                                        </a>
+                                    {% elif sample.status == 'in_transit' %}
+                                        <span class="text-muted">In Transit</span>
+                                    {% else %}
+                                        <span class="text-muted">No action</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-box-open" style="font-size: 3rem; color: #ccc;"></i>
+                    <p class="mt-2">No collected samples yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

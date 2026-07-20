@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Collections – SoilWise{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-soilwise"><i class="fas fa-flask me-2"></i>My Collections</h1>
+        <a href="{% url 'agent_dashboard' %}" class="btn btn-outline-gold">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Stats Card -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="card bg-soilwise text-white text-center shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-flask fa-2x mb-2"></i>
+                    <h5 class="card-title">Total Collections</h5>
+                    <h2 class="display-6">{{ total_collections|default:"0" }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Collections Table -->
+    <div class="card shadow">
+        <div class="card-header bg-soilwise text-white">
+            <h5 class="mb-0"><i class="fas fa-list me-2"></i>All Collections</h5>
+        </div>
+        <div class="card-body">
+            {% if collections %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Barcode</th>
+                                <th>Farm</th>
+                                <th>Farmer</th>
+                                <th>Collection Date</th>
+                                <th>Location</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sample in collections %}
+                            <tr>
+                                <td><code>{{ sample.barcode }}</code></td>
+                                <td>{{ sample.farm.name }}</td>
+                                <td>{{ sample.farm.farmer.username }}</td>
+                                <td>{{ sample.collection_date|date:"M d, Y H:i"|default:"-" }}</td>
+                                <td>{{ sample.collection_location|default:"N/A" }}</td>
+                                <td>
+                                    <span class="badge-status 
+                                        {% if sample.status == 'collected' %}badge-collected
+                                        {% elif sample.status == 'in_transit' %}badge-warning
+                                        {% elif sample.status == 'at_lab' %}badge-info
+                                        {% elif sample.status == 'testing' %}badge-primary
+                                        {% elif sample.status == 'results_ready' %}badge-results
+                                        {% elif sample.status == 'completed' %}badge-success
+                                        {% else %}badge-failed{% endif %}">
+                                        {{ sample.get_status_display }}
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-box-open" style="font-size: 3rem; color: #ccc;"></i>
+                    <p class="mt-2">No collections yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

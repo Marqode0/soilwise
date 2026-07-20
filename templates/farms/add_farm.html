@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Add Farm – SoilWise{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+                    <h2 class="text-soilwise text-center mb-4">
+                        <i class="fas fa-tractor me-2"></i>Add Your Farm
+                    </h2>
+                    <p class="text-muted text-center mb-4">Enter your farm details below.</p>
+
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% if form.errors %}
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            Please correct the errors below.
+                        </div>
+                        {% endif %}
+
+                        <div class="mb-3">
+                            <label class="form-label">Farm Name</label>
+                            {{ form.name }}
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Location</label>
+                            {{ form.location }}
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Size (hectares)</label>
+                                {{ form.size_hectares }}
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Primary Crop</label>
+                                {{ form.primary_crop }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">GPS Coordinates (optional)</label>
+                            {{ form.gps_coordinates }}
+                            <small class="text-muted">e.g., 10.5236, 7.4375</small>
+                        </div>
+
+                        <button type="submit" class="btn btn-gold w-100 py-2">
+                            <i class="fas fa-plus me-2"></i>Add Farm
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a href="{% url 'farm_list' %}" class="text-soilwise">Back to My Farms</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

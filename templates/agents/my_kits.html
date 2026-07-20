@@ -1,0 +1,96 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}My Kits – SoilWise{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-soilwise"><i class="fas fa-box me-2"></i>My Kits</h1>
+        <a href="{% url 'agent_dashboard' %}" class="btn btn-outline-gold">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card bg-soilwise text-white text-center shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-boxes fa-2x mb-2"></i>
+                    <h5 class="card-title">Total Kits</h5>
+                    <h2 class="display-6">{{ total_kits|default:"0" }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-success text-white text-center shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-check-circle fa-2x mb-2"></i>
+                    <h5 class="card-title">Available</h5>
+                    <h2 class="display-6">{{ available_kits|default:"0" }}</h2>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card bg-warning text-dark text-center shadow-sm">
+                <div class="card-body">
+                    <i class="fas fa-check fa-2x mb-2"></i>
+                    <h5 class="card-title">Used</h5>
+                    <h2 class="display-6">{{ used_kits|default:"0" }}</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Kits Table -->
+    <div class="card shadow">
+        <div class="card-header bg-soilwise text-white">
+            <h5 class="mb-0"><i class="fas fa-list me-2"></i>All Kits</h5>
+        </div>
+        <div class="card-body">
+            {% if kits %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Serial Number</th>
+                                <th>Status</th>
+                                <th>Assigned Date</th>
+                                <th>Used On</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for kit in kits %}
+                            <tr>
+                                <td><code>{{ kit.serial_number }}</code></td>
+                                <td>
+                                    <span class="badge-status 
+                                        {% if kit.is_used %}badge-collected
+                                        {% else %}badge-pending{% endif %}">
+                                        {% if kit.is_used %}Used{% else %}Available{% endif %}
+                                    </span>
+                                </td>
+                                <td>{{ kit.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    {% if kit.used_on_sample %}
+                                        {{ kit.used_on_sample.barcode }}
+                                    {% else %}
+                                        <span class="text-muted">Not used yet</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-box-open" style="font-size: 3rem; color: #ccc;"></i>
+                    <p class="mt-2">No kits assigned to you yet.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
