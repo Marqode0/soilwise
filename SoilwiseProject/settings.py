@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from decouple import config
 import os
 from pathlib import Path
-from decouple import config
-
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -29,6 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost']
+
 
 # Application definition
 
@@ -63,7 +62,7 @@ ROOT_URLCONF = 'SoilwiseProject.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],  # This is the important line
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -92,6 +91,8 @@ DATABASES = {
         'PORT': '5432',
     }
 }
+
+
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
 
@@ -128,8 +129,6 @@ USE_TZ = True
 
 AUTH_USER_MODEL = 'accounts.User'
 
-
-# Static files (CSS, JavaScript, Images)
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "static",
@@ -139,6 +138,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 # Media files (Uploaded by users)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / "media"
+
 
 # ===== SESSION SECURITY =====
 # Session expires when browser is closed
@@ -155,9 +155,13 @@ SESSION_COOKIE_SAMESITE = 'Lax'  # Protect against CSRF
 # Logout when session expires
 SESSION_SAVE_EVERY_REQUEST = True  # Reset timer on each request
 
-# Paystack Keys
+
+# ===== PAYSTACK KEYS =====
 PAYSTACK_PUBLIC_KEY = config('PAYSTACK_PUBLIC_KEY')
 PAYSTACK_SECRET_KEY = config('PAYSTACK_SECRET_KEY')
 
-# Email Configuration (Console for testing)
+
+# ===== EMAIL CONFIGURATION =====
+# Console for testing (prints emails to terminal)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+DEFAULT_FROM_EMAIL = 'SoilWise <noreply@soilwise.com>'
